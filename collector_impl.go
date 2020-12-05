@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"sync"
 
-	"github.com/containerssh/geoip"
+	"github.com/containerssh/geoip/geoipprovider"
 )
 
 type collector struct {
-	geoIpLookupProvider geoip.LookupProvider
+	geoIpLookupProvider geoipprovider.LookupProvider
 
 	mutex      *sync.Mutex
 	metricsMap map[string]Metric

@@ -3,11 +3,11 @@ package metrics
 import (
 	"sync"
 
-	"github.com/containerssh/geoip"
+	"github.com/containerssh/geoip/geoipprovider"
 )
 
 // New creates the metric collector.
-func New(geoIpLookupProvider geoip.LookupProvider) Collector {
+func New(geoIpLookupProvider geoipprovider.LookupProvider) Collector {
 	return &collector{
 		geoIpLookupProvider: geoIpLookupProvider,
 		mutex:               &sync.Mutex{},
