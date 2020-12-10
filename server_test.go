@@ -5,11 +5,12 @@ import (
 	"io/ioutil"
 	"net"
 	goHttp "net/http"
+	"os"
 	"strings"
 	"testing"
 
 	"github.com/containerssh/http"
-	"github.com/containerssh/log/standard"
+	"github.com/containerssh/log"
 	"github.com/containerssh/service"
 	"github.com/stretchr/testify/assert"
 
@@ -18,7 +19,11 @@ import (
 
 func TestFetchMetrics(t *testing.T) {
 	geoip := &geoIpLookupProvider{}
-	logger := standard.New()
+	logger, err := log.New(log.Config{
+		Level:  log.LevelDebug,
+		Format: "text",
+	}, "metrics", os.Stdout)
+	assert.NoError(t, err)
 	m := metrics.New(geoip)
 	counter, err := m.CreateCounter("test", "pc", "Test metric")
 	assert.Nil(t, err)
