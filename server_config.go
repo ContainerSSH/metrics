@@ -5,7 +5,7 @@ import (
 )
 
 type Config struct {
-	http.ServerConfiguration
+	http.ServerConfiguration `json:",inline" yaml:",inline"`
 
 	Enable bool   `yaml:"enable" json:"enable" comment:"Enable metrics server." default:"false"`
 	Path   string `yaml:"path" json:"path" comment:"Path to run the Metrics endpoint on." default:"/metrics"`
