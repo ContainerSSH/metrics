@@ -9,11 +9,11 @@ type counterGeoImpl struct {
 	collector *collector
 }
 
-func (c *counterGeoImpl) Increment(ip net.IP) {
-	_ = c.IncrementBy(ip, 1)
+func (c *counterGeoImpl) Increment(ip net.IP, labels ...MetricLabel) {
+	_ = c.IncrementBy(ip, 1, labels...)
 }
 
-func (c *counterGeoImpl) IncrementBy(ip net.IP, by float64) error {
+func (c *counterGeoImpl) IncrementBy(ip net.IP, by float64, labels ...MetricLabel) error {
 	c.collector.mutex.Lock()
 	defer c.collector.mutex.Unlock()
 
@@ -21,11 +21,10 @@ func (c *counterGeoImpl) IncrementBy(ip net.IP, by float64) error {
 		return CounterCannotBeIncrementedByNegative
 	}
 
-	labels := map[string]string{
-		"country": c.collector.geoIpLookupProvider.Lookup(ip),
-	}
+	realLabels := metricLabels(labels).toMap()
+	realLabels["country"] = c.collector.geoIpLookupProvider.Lookup(ip)
 
-	value := c.collector.get(c.name, labels)
-	c.collector.set(c.name, labels, value+by)
+	value := c.collector.get(c.name, realLabels)
+	c.collector.set(c.name, realLabels, value+by)
 	return nil
 }

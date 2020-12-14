@@ -51,4 +51,14 @@ func TestCounter(t *testing.T) {
 		metrics.CounterCannotBeIncrementedByNegative.Error(),
 		"incrementing a counter by negative number did not return an error",
 	)
+
+	counter.Increment(metrics.Label("foo", "bar"))
+	metric = collector.GetMetric("test")
+	for _, m := range metric {
+		if m.CombinedName() == "test{foo=\"bar\"}" {
+			assert.Equal(t, float64(1), m.Value)
+		} else {
+			assert.Equal(t, float64(4), m.Value)
+		}
+	}
 }
