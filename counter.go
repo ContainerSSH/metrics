@@ -5,11 +5,11 @@ type counterImpl struct {
 	collector *collector
 }
 
-func (c *counterImpl) Increment() {
-	_ = c.IncrementBy(1)
+func (c *counterImpl) Increment(labels ...MetricLabel) {
+	_ = c.IncrementBy(1, labels...)
 }
 
-func (c *counterImpl) IncrementBy(by float64) error {
+func (c *counterImpl) IncrementBy(by float64, labels ...MetricLabel) error {
 	c.collector.mutex.Lock()
 	defer c.collector.mutex.Unlock()
 
@@ -17,7 +17,8 @@ func (c *counterImpl) IncrementBy(by float64) error {
 		return CounterCannotBeIncrementedByNegative
 	}
 
-	value := c.collector.get(c.name, map[string]string{})
-	c.collector.set(c.name, map[string]string{}, value+by)
+	realLabels := metricLabels(labels).toMap()
+	value := c.collector.get(c.name, realLabels)
+	c.collector.set(c.name, realLabels, value+by)
 	return nil
 }

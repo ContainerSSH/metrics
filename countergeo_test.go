@@ -44,4 +44,12 @@ func TestCounterGeo(t *testing.T) {
 	assert.Equal(t, 2, len(metric))
 	assert.Equal(t, float64(1), metric[0].Value)
 	assert.Equal(t, float64(1), metric[1].Value)
+
+	counter.Increment(net.ParseIP("127.0.0.2"), metrics.Label("foo", "bar"))
+	metric = collector.GetMetric("test")
+	for _, m := range metric {
+		if m.CombinedName() == "test{country=\"XX\",foo=\"bar\"}" {
+			assert.Equal(t, float64(1), m.Value)
+		}
+	}
 }

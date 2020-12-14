@@ -43,6 +43,23 @@ testCounter.Increment(net.ParseIP("127.0.0.1"))
 
 If you need a metric that can be decremented or set directly you can use the `Gauge` type instead.
 
+### Custom labels
+
+Each of the metric methods allow adding extra labels:
+
+```go
+testCounter.Increment(
+    net.ParseIP("127.0.0.1"),
+    metrics.Label("foo", "bar"),
+    metrics.Label("somelabel","somevalue")
+)
+```
+
+The following rules apply and will cause a `panic` if violated:
+
+- Label names and values cannot be empty.
+- The `country` label name is reserved for GeoIP usage.
+
 ## Using the metrics server
 
 The metrics server exposes the collected metrics on an HTTP webserver in the Prometheus / OpenMetrics format. It requires the [service library](https://github.com/containerssh/service) and a logger from the [log library](https://github.com/containerssh/log) to work properly:
@@ -80,3 +97,4 @@ handler := metrics.NewHandler(
 )
 http.ListenAndServe("0.0.0.0:8080", handler)
 ```
+

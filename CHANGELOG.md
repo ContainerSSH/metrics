@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.3: Custom label support
+
+Each of the metric methods now allow adding extra labels:
+
+```go
+testCounter.Increment(
+    net.ParseIP("127.0.0.1"),
+    metrics.Label("foo", "bar"),
+    metrics.Label("somelabel","somevalue")
+)
+```
+
+The following rules apply and will cause a `panic` if violated:
+
+- Label names and values cannot be empty.
+- The `country` label name is reserved for GeoIP usage.
+
 ## 0.9.2: Fixed JSON and YAML marshalling
 
 In the previous version the JSON and YAML configuration marshalling / unmarshalling created an unnecessary sub-map, which was incompatible to ContainerSSH 0.3. This release fixes that and restores compatibility.

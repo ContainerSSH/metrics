@@ -49,7 +49,8 @@ func (metric Metric) String() string {
 		metric.Name,
 		metric.Unit,
 		metric.Name,
-		metric.Type)
+		metric.Type,
+	)
 }
 
 // MetricValue is a structure that contains a value for a specific metric name and set of values.
@@ -64,6 +65,52 @@ type MetricValue struct {
 	Value float64
 }
 
+// MetricLabel is a struct that can be used with the metrics to pass additional labels. Create it using the
+// Label function.
+type MetricLabel struct {
+	name  string
+	value string
+}
+
+type metricLabels []MetricLabel
+
+func (labels metricLabels) toMap() map[string]string {
+	result := map[string]string{}
+	for _, label := range labels {
+		result[label.name] = label.value
+
+	}
+	return result
+}
+
+// Label creates a MetricLabel for use with the metric functions. Panics if name or value are empty. The name "country"
+// is reserved.
+func Label(name string, value string) MetricLabel {
+	if name == "" {
+		panic("BUG: the name cannot be empty")
+	}
+	if name == "country" {
+		panic("BUG: the name 'country' is reserved for GeoIP lookups")
+	}
+	if value == "" {
+		panic("BUG: the value cannot be empty")
+	}
+	return MetricLabel{
+		name:  name,
+		value: value,
+	}
+}
+
+// Name returns the name of the label.
+func (m MetricLabel) Name() string {
+	return m.name
+}
+
+// Value returns the value of the label.
+func (m MetricLabel) Value() string {
+	return m.value
+}
+
 // CombinedName returns the name and labels combined.
 func (metricValue MetricValue) CombinedName() string {
 	var labelList []string
@@ -74,9 +121,9 @@ func (metricValue MetricValue) CombinedName() string {
 	}
 	sort.Strings(keys)
 
+	replacer := strings.NewReplacer(`"`, `\"`, `\`, `\\`)
 	for _, k := range keys {
-		// TODO escaping
-		labelList = append(labelList, k+"=\""+metricValue.Labels[k]+"\"")
+		labelList = append(labelList, k+"=\""+replacer.Replace(metricValue.Labels[k])+"\"")
 	}
 
 	var labels string
@@ -130,56 +177,84 @@ type Collector interface {
 // SimpleCounter is a simple counter that can only be incremented.
 type SimpleCounter interface {
 	// Increment increments the counter by 1
-	Increment()
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Increment(labels ...MetricLabel)
 
 	// IncrementBy increments the counter by the specified number. Only returns an error if the passed by parameter is
 	//             negative.
-	IncrementBy(by float64) error
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	IncrementBy(by float64, labels ...MetricLabel) error
 }
 
 // SimpleGeoCounter is a simple counter that can only be incremented and is labeled with the country from a GeoIP
 //                  lookup.
 type SimpleGeoCounter interface {
 	// Increment increments the counter for the country from the specified ip by 1.
-	Increment(ip net.IP)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Increment(ip net.IP, labels ...MetricLabel)
 
 	// IncrementBy increments the counter for the country from the specified ip by the specified value.
 	//             Only returns an error if the passed by parameter is negative.
-	IncrementBy(ip net.IP, by float64) error
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	IncrementBy(ip net.IP, by float64, labels ...MetricLabel) error
 }
 
 // SimpleGauge is a metric that can be incremented and decremented.
 type SimpleGauge interface {
-	// Increment increments the counter by 1
-	Increment()
+	// Increment increments the counter by 1.
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Increment(labels ...MetricLabel)
 
 	// IncrementBy increments the counter by the specified number.
-	IncrementBy(by float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	IncrementBy(by float64, labels ...MetricLabel)
 
 	// Decrement decreases the metric by 1.
-	Decrement()
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Decrement(labels ...MetricLabel)
 
 	// Decrement decreases the metric by the specified value.
-	DecrementBy(by float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	DecrementBy(by float64, labels ...MetricLabel)
 
 	// Set sets the value of the metric to an exact value.
-	Set(value float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Set(value float64, labels ...MetricLabel)
 }
 
 // SimpleGeoGauge is a metric that can be incremented and decremented and is labeled by the country from a GeoIP lookup.
 type SimpleGeoGauge interface {
 	// Increment increments the counter for the country from the specified ip by 1.
-	Increment(ip net.IP)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Increment(ip net.IP, labels ...MetricLabel)
 
 	// IncrementBy increments the counter for the country from the specified ip by the specified value.
-	IncrementBy(ip net.IP, by float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	IncrementBy(ip net.IP, by float64, labels ...MetricLabel)
 
 	// Decrement decreases the value for the country looked up from the specified IP by 1.
-	Decrement(ip net.IP)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Decrement(ip net.IP, labels ...MetricLabel)
 
 	// DecrementBy decreases the value for the country looked up from the specified IP by the specified value.
-	DecrementBy(ip net.IP, by float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	DecrementBy(ip net.IP, by float64, labels ...MetricLabel)
 
 	// Set sets the value of the metric for the country looked up from the specified IP.
-	Set(ip net.IP, value float64)
+	//
+	// - labels is a set of labels to apply. Can be created using the Label function.
+	Set(ip net.IP, value float64, labels ...MetricLabel)
 }
