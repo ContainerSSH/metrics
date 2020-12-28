@@ -53,3 +53,24 @@ func TestCounterGeo(t *testing.T) {
 		}
 	}
 }
+
+// TestCounter tests the functionality of counters
+func TestGeoCounterLabel(t *testing.T) {
+	collector := metrics.New(&geoIpLookupProvider{})
+	counter, err := collector.CreateCounterGeo("test", "seconds", "Hello world!")
+	assert.Nil(t, err, "creating counter returned an error")
+	counter.Increment(net.ParseIP("127.0.0.2"))
+	newCounter := counter.WithLabels(metrics.Label("foo", "bar"))
+	newCounter.Increment(net.ParseIP("127.0.0.2"), metrics.Label("baz", "bar"))
+
+	metric := collector.GetMetric("test")
+	assert.Equal(t, 2, len(metric))
+
+	assert.Equal(t, "test", metric[0].Name)
+	assert.Equal(t, float64(1), metric[0].Value)
+	assert.Equal(t, 1, len(metric[0].Labels))
+
+	assert.Equal(t, "test", metric[1].Name)
+	assert.Equal(t, float64(1), metric[1].Value)
+	assert.Equal(t, 3, len(metric[1].Labels))
+}

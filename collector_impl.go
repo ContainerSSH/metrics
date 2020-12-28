@@ -16,7 +16,7 @@ type collector struct {
 	values     map[string]*metricValue
 }
 
-func (c *collector) MustCreateCounter(name string, unit string, help string) SimpleCounter {
+func (c *collector) MustCreateCounter(name string, unit string, help string) Counter {
 	counter, err := c.CreateCounter(name, unit, help)
 	if err != nil {
 		panic(err)
@@ -24,7 +24,7 @@ func (c *collector) MustCreateCounter(name string, unit string, help string) Sim
 	return counter
 }
 
-func (c *collector) MustCreateCounterGeo(name string, unit string, help string) SimpleGeoCounter {
+func (c *collector) MustCreateCounterGeo(name string, unit string, help string) GeoCounter {
 	counter, err := c.CreateCounterGeo(name, unit, help)
 	if err != nil {
 		panic(err)
@@ -32,7 +32,7 @@ func (c *collector) MustCreateCounterGeo(name string, unit string, help string) 
 	return counter
 }
 
-func (c *collector) MustCreateGauge(name string, unit string, help string) SimpleGauge {
+func (c *collector) MustCreateGauge(name string, unit string, help string) Gauge {
 	gauge, err := c.CreateGauge(name, unit, help)
 	if err != nil {
 		panic(err)
@@ -40,7 +40,7 @@ func (c *collector) MustCreateGauge(name string, unit string, help string) Simpl
 	return gauge
 }
 
-func (c *collector) MustCreateGaugeGeo(name string, unit string, help string) SimpleGeoGauge {
+func (c *collector) MustCreateGaugeGeo(name string, unit string, help string) GeoGauge {
 	gauge, err := c.CreateGaugeGeo(name, unit, help)
 	if err != nil {
 		panic(err)
@@ -72,7 +72,7 @@ func (c *collector) createMetric(name string, unit string, help string, metricTy
 	return nil
 }
 
-func (c *collector) CreateCounter(name string, unit string, help string) (SimpleCounter, error) {
+func (c *collector) CreateCounter(name string, unit string, help string) (Counter, error) {
 	if err := c.createMetric(name, unit, help, MetricTypeCounter); err != nil {
 		return nil, err
 	}
@@ -82,7 +82,7 @@ func (c *collector) CreateCounter(name string, unit string, help string) (Simple
 	}, nil
 }
 
-func (c *collector) CreateCounterGeo(name string, unit string, help string) (SimpleGeoCounter, error) {
+func (c *collector) CreateCounterGeo(name string, unit string, help string) (GeoCounter, error) {
 	if err := c.createMetric(name, unit, help, MetricTypeCounter); err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (c *collector) CreateCounterGeo(name string, unit string, help string) (Sim
 	}, nil
 }
 
-func (c *collector) CreateGauge(name string, unit string, help string) (SimpleGauge, error) {
+func (c *collector) CreateGauge(name string, unit string, help string) (Gauge, error) {
 	if err := c.createMetric(name, unit, help, MetricTypeGauge); err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (c *collector) CreateGauge(name string, unit string, help string) (SimpleGa
 	}, nil
 }
 
-func (c *collector) CreateGaugeGeo(name string, unit string, help string) (SimpleGeoGauge, error) {
+func (c *collector) CreateGaugeGeo(name string, unit string, help string) (GeoGauge, error) {
 	if err := c.createMetric(name, unit, help, MetricTypeGauge); err != nil {
 		return nil, err
 	}

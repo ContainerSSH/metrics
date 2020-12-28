@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.5: Added extended metrics
+
+This release adds a `WithLabel` method to create metrics primed with certain labels. This can be used when passing labels between modules.
+
 ## 0.9.4: Add `Must*` methods
 
 This release adds methods starting with `Must` that panic instead of throwing an error.

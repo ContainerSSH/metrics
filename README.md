@@ -60,6 +60,8 @@ The following rules apply and will cause a `panic` if violated:
 - Label names and values cannot be empty.
 - The `country` label name is reserved for GeoIP usage.
 
+The metrics also have a `WithLabels()` method that allow for creating a copy of a metric already primed with a set of labels. This can be used when passing metrics to other modules that need to be scoped.
+
 ## Using the metrics server
 
 The metrics server exposes the collected metrics on an HTTP webserver in the Prometheus / OpenMetrics format. It requires the [service library](https://github.com/containerssh/service) and a logger from the [log library](https://github.com/containerssh/log) to work properly:
