@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.4: Add `Must*` methods
+
+This release adds methods starting with `Must` that panic instead of throwing an error.
+
 ## 0.9.3: Custom label support
 
 Each of the metric methods now allow adding extra labels:

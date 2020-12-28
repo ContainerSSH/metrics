@@ -16,6 +16,38 @@ type collector struct {
 	values     map[string]*metricValue
 }
 
+func (c *collector) MustCreateCounter(name string, unit string, help string) SimpleCounter {
+	counter, err := c.CreateCounter(name, unit, help)
+	if err != nil {
+		panic(err)
+	}
+	return counter
+}
+
+func (c *collector) MustCreateCounterGeo(name string, unit string, help string) SimpleGeoCounter {
+	counter, err := c.CreateCounterGeo(name, unit, help)
+	if err != nil {
+		panic(err)
+	}
+	return counter
+}
+
+func (c *collector) MustCreateGauge(name string, unit string, help string) SimpleGauge {
+	gauge, err := c.CreateGauge(name, unit, help)
+	if err != nil {
+		panic(err)
+	}
+	return gauge
+}
+
+func (c *collector) MustCreateGaugeGeo(name string, unit string, help string) SimpleGeoGauge {
+	gauge, err := c.CreateGaugeGeo(name, unit, help)
+	if err != nil {
+		panic(err)
+	}
+	return gauge
+}
+
 type metricValue struct {
 	metricValueMap map[string]*MetricValue
 	metricValues   []*MetricValue
