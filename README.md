@@ -41,7 +41,7 @@ testCounter, err := m.CreateCounterGeo(
 testCounter.Increment(net.ParseIP("127.0.0.1"))
 ```
 
-If you need a metric that can be decremented or set directly you can use the `Gauge` type instead.
+If you need a metric that can be decremented or set directly you can use the `Gauge` type instead. Each `Create*` method also has a counterpart named `MustCreate*`, which panics instead of returning an error.
 
 ### Custom labels
 

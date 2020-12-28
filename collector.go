@@ -153,16 +153,32 @@ type Collector interface {
 	// CreateCounter creates a monotonic (increasing) counter with the specified name and help text.
 	CreateCounter(name string, unit string, help string) (SimpleCounter, error)
 
+	// MustCreateCounter creates a monotonic (increasing) counter with the specified name and help text. Panics if an
+	// error occurs.
+	MustCreateCounter(name string, unit string, help string) SimpleCounter
+
 	// CreateCounterGeo creates a monotonic (increasing) counter that is labeled with the country from the GeoIP lookup
-	//                  with the specified name and help text.
+	// with the specified name and help text.
 	CreateCounterGeo(name string, unit string, help string) (SimpleGeoCounter, error)
+
+	// MustCreateCounterGeo creates a monotonic (increasing) counter that is labeled with the country from the GeoIP
+	// lookup with the specified name and help text. Panics if an error occurs.
+	MustCreateCounterGeo(name string, unit string, help string) SimpleGeoCounter
 
 	// CreateGauge creates a freely modifiable numeric gauge with the specified name and help text.
 	CreateGauge(name string, unit string, help string) (SimpleGauge, error)
 
+	// MustCreateGauge creates a freely modifiable numeric gauge with the specified name and help text. Panics if an
+	// error occurs.
+	MustCreateGauge(name string, unit string, help string) SimpleGauge
+
 	// CreateGaugeGeo creates a freely modifiable numeric gauge that is labeled with the country from the GeoIP lookup
-	//                with the specified name and help text.
+	// with the specified name and help text.
 	CreateGaugeGeo(name string, unit string, help string) (SimpleGeoGauge, error)
+
+	// MustCreateGaugeGeo creates a freely modifiable numeric gauge that is labeled with the country from the GeoIP
+	// lookup with the specified name and help text. Panics if an error occurs.
+	MustCreateGaugeGeo(name string, unit string, help string) SimpleGeoGauge
 
 	// ListMetrics returns a list of metrics metadata stored in the collector.
 	ListMetrics() []Metric
