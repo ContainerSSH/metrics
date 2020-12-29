@@ -7,6 +7,7 @@ import (
 type counterGeoImpl struct {
 	name      string
 	collector *collector
+	labels    []MetricLabel
 }
 
 func (c *counterGeoImpl) Increment(ip net.IP, labels ...MetricLabel) {
@@ -21,10 +22,20 @@ func (c *counterGeoImpl) IncrementBy(ip net.IP, by float64, labels ...MetricLabe
 		return CounterCannotBeIncrementedByNegative
 	}
 
-	realLabels := metricLabels(labels).toMap()
+	realLabels := metricLabels(
+		append(c.labels, labels...),
+	).toMap()
 	realLabels["country"] = c.collector.geoIpLookupProvider.Lookup(ip)
 
 	value := c.collector.get(c.name, realLabels)
 	c.collector.set(c.name, realLabels, value+by)
 	return nil
+}
+
+func (c *counterGeoImpl) WithLabels(labels ...MetricLabel) GeoCounter {
+	return &counterGeoImpl{
+		name:      c.name,
+		collector: c.collector,
+		labels:    append(c.labels, labels...),
+	}
 }

@@ -151,34 +151,34 @@ var CounterCannotBeIncrementedByNegative = errors.New("a counter cannot be incre
 // Collector is the main interface for interacting with the metrics collector.
 type Collector interface {
 	// CreateCounter creates a monotonic (increasing) counter with the specified name and help text.
-	CreateCounter(name string, unit string, help string) (SimpleCounter, error)
+	CreateCounter(name string, unit string, help string) (Counter, error)
 
 	// MustCreateCounter creates a monotonic (increasing) counter with the specified name and help text. Panics if an
 	// error occurs.
-	MustCreateCounter(name string, unit string, help string) SimpleCounter
+	MustCreateCounter(name string, unit string, help string) Counter
 
 	// CreateCounterGeo creates a monotonic (increasing) counter that is labeled with the country from the GeoIP lookup
 	// with the specified name and help text.
-	CreateCounterGeo(name string, unit string, help string) (SimpleGeoCounter, error)
+	CreateCounterGeo(name string, unit string, help string) (GeoCounter, error)
 
 	// MustCreateCounterGeo creates a monotonic (increasing) counter that is labeled with the country from the GeoIP
 	// lookup with the specified name and help text. Panics if an error occurs.
-	MustCreateCounterGeo(name string, unit string, help string) SimpleGeoCounter
+	MustCreateCounterGeo(name string, unit string, help string) GeoCounter
 
 	// CreateGauge creates a freely modifiable numeric gauge with the specified name and help text.
-	CreateGauge(name string, unit string, help string) (SimpleGauge, error)
+	CreateGauge(name string, unit string, help string) (Gauge, error)
 
 	// MustCreateGauge creates a freely modifiable numeric gauge with the specified name and help text. Panics if an
 	// error occurs.
-	MustCreateGauge(name string, unit string, help string) SimpleGauge
+	MustCreateGauge(name string, unit string, help string) Gauge
 
 	// CreateGaugeGeo creates a freely modifiable numeric gauge that is labeled with the country from the GeoIP lookup
 	// with the specified name and help text.
-	CreateGaugeGeo(name string, unit string, help string) (SimpleGeoGauge, error)
+	CreateGaugeGeo(name string, unit string, help string) (GeoGauge, error)
 
 	// MustCreateGaugeGeo creates a freely modifiable numeric gauge that is labeled with the country from the GeoIP
 	// lookup with the specified name and help text. Panics if an error occurs.
-	MustCreateGaugeGeo(name string, unit string, help string) SimpleGeoGauge
+	MustCreateGaugeGeo(name string, unit string, help string) GeoGauge
 
 	// ListMetrics returns a list of metrics metadata stored in the collector.
 	ListMetrics() []Metric
@@ -204,6 +204,15 @@ type SimpleCounter interface {
 	IncrementBy(by float64, labels ...MetricLabel) error
 }
 
+// Counter extends the SimpleCounter interface by adding a WithLabels function to create a copy of the counter that
+// is primed with a set of labels.
+type Counter interface {
+	SimpleCounter
+
+	// WithLabels adds labels to the counter
+	WithLabels(labels ...MetricLabel) Counter
+}
+
 // SimpleGeoCounter is a simple counter that can only be incremented and is labeled with the country from a GeoIP
 //                  lookup.
 type SimpleGeoCounter interface {
@@ -217,6 +226,15 @@ type SimpleGeoCounter interface {
 	//
 	// - labels is a set of labels to apply. Can be created using the Label function.
 	IncrementBy(ip net.IP, by float64, labels ...MetricLabel) error
+}
+
+// GeoCounter extends the SimpleGeoCounter interface by adding a WithLabels function to create a copy of the counter
+// that is primed with a set of labels.
+type GeoCounter interface {
+	SimpleGeoCounter
+
+	// WithLabels adds labels to the counter
+	WithLabels(labels ...MetricLabel) GeoCounter
 }
 
 // SimpleGauge is a metric that can be incremented and decremented.
@@ -247,6 +265,15 @@ type SimpleGauge interface {
 	Set(value float64, labels ...MetricLabel)
 }
 
+// Gauge extends the SimpleGauge interface by adding a WithLabels function to create a copy of the counter
+// that is primed with a set of labels.
+type Gauge interface {
+	SimpleGauge
+
+	// WithLabels adds labels to the counter
+	WithLabels(labels ...MetricLabel) Gauge
+}
+
 // SimpleGeoGauge is a metric that can be incremented and decremented and is labeled by the country from a GeoIP lookup.
 type SimpleGeoGauge interface {
 	// Increment increments the counter for the country from the specified ip by 1.
@@ -273,4 +300,13 @@ type SimpleGeoGauge interface {
 	//
 	// - labels is a set of labels to apply. Can be created using the Label function.
 	Set(ip net.IP, value float64, labels ...MetricLabel)
+}
+
+// GeoGauge extends the SimpleGeoGauge interface by adding a WithLabels function to create a copy of the counter
+// that is primed with a set of labels.
+type GeoGauge interface {
+	SimpleGeoGauge
+
+	// WithLabels adds labels to the counter
+	WithLabels(labels ...MetricLabel) GeoGauge
 }

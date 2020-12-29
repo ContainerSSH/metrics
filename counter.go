@@ -3,6 +3,7 @@ package metrics
 type counterImpl struct {
 	name      string
 	collector *collector
+	labels    []MetricLabel
 }
 
 func (c *counterImpl) Increment(labels ...MetricLabel) {
@@ -17,8 +18,18 @@ func (c *counterImpl) IncrementBy(by float64, labels ...MetricLabel) error {
 		return CounterCannotBeIncrementedByNegative
 	}
 
-	realLabels := metricLabels(labels).toMap()
+	realLabels := metricLabels(
+		append(c.labels, labels...),
+	).toMap()
 	value := c.collector.get(c.name, realLabels)
 	c.collector.set(c.name, realLabels, value+by)
 	return nil
+}
+
+func (c *counterImpl) WithLabels(labels ...MetricLabel) Counter {
+	return &counterImpl{
+		name:      c.name,
+		collector: c.collector,
+		labels:    append(c.labels, labels...),
+	}
 }
