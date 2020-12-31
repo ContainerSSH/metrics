@@ -1,5 +1,5 @@
-github.com/containerssh/geoip v0.9.3 h1:RDj46uxB3Ew7qoTHCUClBDkqULRZJOLxYf/VqPgEuK8=
-github.com/containerssh/geoip v0.9.3/go.mod h1:8fyg4eUrKKY0FDyS7GofI6OO7UXDoG1icRtVAHb510k=
+github.com/containerssh/geoip v0.9.4 h1:ugkbESJpitdObbSHdYNQfpoFJOlvxwNCX2ZHHnlVJzA=
+github.com/containerssh/geoip v0.9.4/go.mod h1:JxyH+hKj7LfoXWmOMR5lQVrNJCpy42N3GNWSPEguq24=
 github.com/containerssh/http v0.9.5 h1:rkC47g5TShbIls2rSZbFT5SCLNDWeWziAcRb9FLw1YU=
 github.com/containerssh/http v0.9.5/go.mod h1:EHEDmrTsA7S0JUnCHVAj1kN0JsQFcbwiTgz9S/uO3tc=
 github.com/containerssh/log v0.9.2 h1:QngZdg3EFvFxthpJY4X2qgVwqSHFTzHJ2kCiQkR7FLQ=
