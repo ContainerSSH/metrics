@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.6: Fixed listen default
+
+This release fixes a regression where the default `listen` value would be `0.0.0.0:8080` instead of `0.0.0.0:9100`.
+
 ## 0.9.5: Added extended metrics
 
 This release adds a `WithLabel` method to create metrics primed with certain labels. This can be used when passing labels between modules.
