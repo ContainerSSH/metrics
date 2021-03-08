@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net"
 	goHttp "net/http"
-	"os"
 	"strings"
 	"testing"
 
@@ -19,11 +18,7 @@ import (
 
 func TestFetchMetrics(t *testing.T) {
 	geoip := &geoIpLookupProvider{}
-	logger, err := log.New(log.Config{
-		Level:  log.LevelDebug,
-		Format: "text",
-	}, "metrics", os.Stdout)
-	assert.NoError(t, err)
+	logger := log.NewTestLogger(t)
 	m := metrics.New(geoip)
 	counter, err := m.CreateCounter("test", "pc", "Test metric")
 	assert.Nil(t, err)
