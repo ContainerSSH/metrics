@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.7: Better validation
+
+This release adds better validation for the metrics server.
+
 ## 0.9.6: Fixed listen default
 
 This release fixes a regression where the default `listen` value would be `0.0.0.0:8080` instead of `0.0.0.0:9100`.
