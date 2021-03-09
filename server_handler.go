@@ -29,7 +29,7 @@ func (h *metricsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Req
 		writer.WriteHeader(404)
 		return
 	}
-	writer.Header().Set("Content-Type", "application/openmetrics-text")
+	writer.Header().Set("Content-Type", "application/openmetrics-text; version=1.0.0; charset=utf-8")
 	writer.WriteHeader(200)
 	_, _ = writer.Write([]byte(h.collector.String()))
 }

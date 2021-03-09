@@ -18,5 +18,12 @@ func NewServer(config Config, collector Collector, logger log.Logger) (http.Serv
 			collector,
 		),
 		logger,
+		func(url string) {
+			logger.Info(log.NewMessage(
+				MServiceAvailable,
+				"Metrics server is now available at %s%s",
+				url, config.Path,
+			))
+		},
 	)
 }

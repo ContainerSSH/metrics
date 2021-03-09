@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.8: Startup message
+
+This release adds a log message at startup.
+
 ## 0.9.7: Better validation
 
 This release adds better validation for the metrics server.
