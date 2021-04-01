@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0: First stable release
+
+This is the first tagged stable release for ContainerSSH 0.4.0.
+
 ## 0.9.8: Startup message
 
 This release adds a log message at startup.
