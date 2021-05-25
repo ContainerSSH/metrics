@@ -7,7 +7,7 @@ require (
 	github.com/containerssh/http v1.0.0
 	github.com/containerssh/log v1.0.0
 	github.com/containerssh/service v1.0.0
-	github.com/containerssh/structutils v1.0.0
+	github.com/containerssh/structutils v1.1.0
 	github.com/stretchr/testify v1.7.0
 )
 
