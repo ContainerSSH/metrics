@@ -4,10 +4,10 @@ go 1.14
 
 require (
 	github.com/containerssh/geoip v1.0.0
-	github.com/containerssh/http v1.0.0
-	github.com/containerssh/log v1.0.0
+	github.com/containerssh/http v1.3.0
+	github.com/containerssh/log v1.1.6
 	github.com/containerssh/service v1.0.0
-	github.com/containerssh/structutils v1.0.0
+	github.com/containerssh/structutils v1.1.0
 	github.com/stretchr/testify v1.7.0
 )
 
