@@ -8,7 +8,7 @@ require (
 	github.com/containerssh/log v1.0.0
 	github.com/containerssh/service v1.0.0
 	github.com/containerssh/structutils v1.0.0
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.2
 )
 
 // Fixes CVE-2019-11254
